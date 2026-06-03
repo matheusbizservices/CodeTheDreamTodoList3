@@ -1,35 +1,23 @@
-import React from 'react';
+// reusable labelled text input. In React 19 ref is just a regular prop,
+// so we accept it and forward it to the underlying <input> so callers
+// like TodoForm can focus the field.
+function TextInputWithLabel({ elementId, labelText, onChange, value, ref }) {
+  return (
+    <>
+      <label htmlFor={elementId}>
+        {labelText}
+      </label>
 
-function TextInputWithLabel(props) {
-
-const {
-elementId,
-labelText,
-onChange,
-value
-} = props;
-
-
-// might use it for other forms later too
-return (
-<>
-
-  <label htmlFor={elementId}>
-    {labelText}
-  </label>
-
-  <input
-    type="text"
-    id={elementId}
-    value={value}
-    onChange={onChange}
-    autoComplete="off"
-  />
-
-
-</>
-
-);
+      <input
+        ref={ref}
+        type="text"
+        id={elementId}
+        value={value}
+        onChange={onChange}
+        autoComplete="off"
+      />
+    </>
+  );
 }
 
 export default TextInputWithLabel;

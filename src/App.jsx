@@ -1,82 +1,61 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 import TodoList from './features/TodoList/TodoList';
 import TodoForm from './features/TodoForm';
 
 function App() {
+  const [todoList, setTodoList] = useState([]);
 
-const [todoList, setTodoList] = useState([]);
-
-// adds new todo item into state
-const addTodo = (todoTitle) => {
-
-const newTodo = {
-  id: Date.now(), // quick id solution for now
-  title: todoTitle,
-  isCompleted: false
-};
-
-// putting newest todos first
-setTodoList((prevList) => {
-  return [newTodo, ...prevList];
-});
-
-};
-
-// marks todo as completed
-const completeTodo = (id) => {
-
-const updatedTodoList = todoList.map((todoItem) => {
-
-  if (todoItem.id === id) {
-
-    // keeping object spread because it's easier to read later
-    return {
-      ...todoItem,
-      isCompleted: true
+  // adds new todo item into state
+  const addTodo = (todoTitle) => {
+    const newTodo = {
+      id: Date.now(), // quick id solution for now
+      title: todoTitle,
+      isCompleted: false
     };
 
-  }
+    // putting newest todos first
+    setTodoList((prevList) => [newTodo, ...prevList]);
+  };
 
-  return todoItem;
-});
+  // marks todo as completed
+  const completeTodo = (id) => {
+    const updatedTodoList = todoList.map((todoItem) => {
+      if (todoItem.id === id) {
+        return { ...todoItem, isCompleted: true };
+      }
+      return todoItem;
+    });
 
-setTodoList(updatedTodoList);
+    setTodoList(updatedTodoList);
+  };
 
-// maybe later i'll move completed items into another section
+  // updates todo title after editing
+  const updateTodo = (editedTodo) => {
+    const updatedTodos = todoList.map((todoItem) => {
+      if (todoItem.id === editedTodo.id) {
+        return { ...editedTodo };
+      }
+      return todoItem;
+    });
 
-};
+    setTodoList(updatedTodos);
+  };
 
-return (
-<div className="App">
+  return (
+    <div className="App">
+      <h1>Todo List</h1>
 
-  <h1>Todo List</h1>
+      <TodoForm onAddTodo={addTodo} />
 
-  <TodoForm onAddTodo={addTodo} />
-
-  <TodoList
-    todoList={todoList}
-    onCompleteTodo={completeTodo}
-  />
-
-</div>
-
-);
+      <TodoList
+        todoList={todoList}
+        onCompleteTodo={completeTodo}
+        onUpdateTodo={updateTodo}
+      />
+    </div>
+  );
 }
-
-// updates todo title after editing
-const updateTodo = (editedTodo) => {
-const updatedTodos = todoList.map((todoItem) => {
-if (todoItem.id === editedTodo.id) {  return {    ...editedTodo  };}return todoItem;
-});
-setTodoList(updatedTodos);
-};
-// pass updateTodo into TodoList too
-<TodoList
-todoList={todoList}
-onCompleteTodo={completeTodo}
-onUpdateTodo={updateTodo}
-/>
 
 export default App;

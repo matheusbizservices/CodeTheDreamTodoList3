@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import TextInputWithLabel from '../../shared/TextInputWithLabel';
 import { isValidTodoTitle } from '../../utils/todoValidation';
