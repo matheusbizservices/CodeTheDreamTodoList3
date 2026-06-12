@@ -1,47 +1,86 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import TodoForm from './TodoForm';
 import TodoList from './TodoList/TodoList';
+import SortBy from '../../shared/SortBy';
+import FilterInput from '../../shared/FilterInput';
+import useDebounce from '../../utils/useDebounce';
 
 function TodosPage({ token }) {
   const [todoList, setTodoList] = useState([]);
   const [error, setError] = useState('');
+  const [filterError, setFilterError] = useState('');
   const [isTodoListLoading, setIsTodoListLoading] = useState(false);
+  const [sortBy, setSortBy] = useState('creationDate');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [filterTerm, setFilterTerm] = useState('');
+  const [dataVersion, setDataVersion] = useState(0);
+
+  const debouncedFilterTerm = useDebounce(filterTerm, 300);
+
+  const invalidateCache = useCallback(() => {
+    setDataVersion((prev) => prev + 1);
+  }, []);
+
+  const handleFilterChange = (newTerm) => {
+    setFilterTerm(newTerm);
+  };
+
+  const fetchTodos = useCallback(async () => {
+    setIsTodoListLoading(true);
+
+    try {
+      const paramsObject = {
+        sortBy,
+        sortDirection,
+      };
+
+      if (debouncedFilterTerm) {
+        paramsObject.find = debouncedFilterTerm;
+      }
+
+      const params = new URLSearchParams(paramsObject);
+
+      const response = await fetch(`/api/tasks?${params}`, {
+        headers: {
+          'X-CSRF-TOKEN': token,
+        },
+        credentials: 'include',
+      });
+
+      if (response.status === 401) {
+        throw new Error('unauthorized');
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch todos');
+      }
+
+      const data = await response.json();
+
+      setTodoList(data.tasks);
+      setFilterError('');
+    } catch (fetchError) {
+      if (
+        debouncedFilterTerm ||
+        sortBy !== 'creationDate' ||
+        sortDirection !== 'desc'
+      ) {
+        setFilterError(`Error filtering/sorting todos: ${fetchError.message}`);
+      } else {
+        setError(`Error fetching todos: ${fetchError.message}`);
+      }
+    } finally {
+      setIsTodoListLoading(false);
+    }
+  }, [token, sortBy, sortDirection, debouncedFilterTerm]);
 
   useEffect(() => {
-    const fetchTodos = async () => {
-      setIsTodoListLoading(true);
-
-      try {
-        const response = await fetch('/api/tasks', {
-          headers: {
-            'X-CSRF-TOKEN': token,
-          },
-          credentials: 'include',
-        });
-
-        if (response.status === 401) {
-          throw new Error('unauthorized');
-        }
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch todos');
-        }
-
-        const data = await response.json();
-
-        setTodoList(data.tasks);
-      } catch (fetchError) {
-        setError(`Error: ${fetchError.message}`);
-      } finally {
-        setIsTodoListLoading(false);
-      }
-    };
-
     if (token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- data fetch sets loading/error state by design
       fetchTodos();
     }
-  }, [token]);
+  }, [token, fetchTodos]);
 
   const addTodo = async (todoTitle) => {
     const newTodo = {
@@ -78,6 +117,7 @@ function TodosPage({ token }) {
           todoItem.id === newTodo.id ? savedTodo : todoItem
         )
       );
+      invalidateCache();
     } catch (addError) {
       setTodoList((prevList) =>
         prevList.filter((todoItem) => todoItem.id !== newTodo.id)
@@ -109,6 +149,8 @@ function TodosPage({ token }) {
       if (!response.ok) {
         throw new Error('Failed to complete todo');
       }
+
+      invalidateCache();
     } catch (completeError) {
       setTodoList((prevList) =>
         prevList.map((todoItem) =>
@@ -147,6 +189,8 @@ function TodosPage({ token }) {
       if (!response.ok) {
         throw new Error('Failed to update todo');
       }
+
+      invalidateCache();
     } catch (updateError) {
       setTodoList((prevList) =>
         prevList.map((todoItem) =>
@@ -155,6 +199,13 @@ function TodosPage({ token }) {
       );
       setError(`Error: ${updateError.message}`);
     }
+  };
+
+  const handleResetFilters = () => {
+    setFilterTerm('');
+    setSortBy('creationDate');
+    setSortDirection('desc');
+    setFilterError('');
   };
 
   return (
@@ -168,7 +219,28 @@ function TodosPage({ token }) {
         </div>
       )}
 
+      {filterError && (
+        <div role="alert">
+          <p>{filterError}</p>
+          <button type="button" onClick={() => setFilterError('')}>
+            Clear Filter Error
+          </button>
+          <button type="button" onClick={handleResetFilters}>
+            Reset Filters
+          </button>
+        </div>
+      )}
+
       {isTodoListLoading && <p>Loading...</p>}
+
+      <SortBy
+        sortBy={sortBy}
+        sortDirection={sortDirection}
+        onSortByChange={setSortBy}
+        onSortDirectionChange={setSortDirection}
+      />
+
+      <FilterInput filterTerm={filterTerm} onFilterChange={handleFilterChange} />
 
       <TodoForm onAddTodo={addTodo} />
 
@@ -176,6 +248,7 @@ function TodosPage({ token }) {
         todoList={todoList}
         onCompleteTodo={completeTodo}
         onUpdateTodo={updateTodo}
+        dataVersion={dataVersion}
       />
     </div>
   );
