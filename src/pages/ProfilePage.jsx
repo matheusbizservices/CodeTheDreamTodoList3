@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/useAuth';
+import styles from './ProfilePage.module.css';
 
 function ProfilePage() {
   const { email, token } = useAuth();
@@ -63,21 +64,25 @@ function ProfilePage() {
     <div>
       <h2>Profile</h2>
 
-      <section>
+      <section className={styles.section}>
         <h3>Account</h3>
         <p>Email: {email}</p>
         <p>Status: Logged in</p>
       </section>
 
-      <section>
+      <section className={styles.section}>
         <h3>Todo Stats</h3>
 
-        {loading && <p>Loading stats...</p>}
+        {loading && <p className={styles.loading}>Loading stats...</p>}
 
-        {error && <p role="alert">{error}</p>}
+        {error && (
+          <p className={styles.error} role="alert">
+            {error}
+          </p>
+        )}
 
         {!loading && !error && (
-          <ul>
+          <ul className={styles.statsList}>
             <li>Total todos: {todoStats.total}</li>
             <li>Completed: {todoStats.completed}</li>
             <li>Active: {todoStats.active}</li>

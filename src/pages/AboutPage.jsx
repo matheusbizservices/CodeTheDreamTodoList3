@@ -1,6 +1,8 @@
+import styles from './StaticPage.module.css';
+
 function AboutPage() {
   return (
-    <div>
+    <div className={styles.page}>
       <h2>About This App</h2>
       <p>
         This is a todo list app built as part of the Code the Dream React
@@ -9,7 +11,7 @@ function AboutPage() {
       </p>
 
       <h3>Features</h3>
-      <ul>
+      <ul className={styles.list}>
         <li>Email/password login with session based auth</li>
         <li>Add, complete, and edit todos with optimistic updates</li>
         <li>Sort todos by creation date or title</li>
@@ -19,10 +21,12 @@ function AboutPage() {
       </ul>
 
       <h3>Technologies Used</h3>
-      <ul>
+      <ul className={styles.list}>
         <li>React</li>
         <li>React Router</li>
         <li>Vite</li>
+        <li>CSS Modules</li>
+        <li>DOMPurify</li>
       </ul>
     </div>
   );

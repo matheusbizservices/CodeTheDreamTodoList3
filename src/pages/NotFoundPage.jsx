@@ -1,12 +1,13 @@
 import { Link } from 'react-router';
+import styles from './StaticPage.module.css';
 
 function NotFoundPage() {
   return (
-    <div>
+    <div className={`${styles.page} ${styles.centered}`}>
       <h2>404 - Page Not Found</h2>
       <p>We couldn't find the page you were looking for.</p>
 
-      <ul>
+      <ul className={styles.linkList}>
         <li>
           <Link to="/">Home</Link>
         </li>

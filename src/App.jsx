@@ -1,5 +1,3 @@
-import './App.css';
-
 import { Routes, Route } from 'react-router';
 import Header from './shared/Header';
 import HomePage from './pages/HomePage';
@@ -9,34 +7,37 @@ import TodosPage from './pages/TodosPage';
 import ProfilePage from './pages/ProfilePage';
 import NotFoundPage from './pages/NotFoundPage';
 import RequireAuth from './components/RequireAuth';
+import styles from './App.module.css';
 
 function App() {
   return (
-    <div className="App">
+    <div className={styles.app}>
       <Header />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/todos"
-          element={
-            <RequireAuth>
-              <TodosPage />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth>
-              <ProfilePage />
-            </RequireAuth>
-          }
-        />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <main className={styles.main}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/todos"
+            element={
+              <RequireAuth>
+                <TodosPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }

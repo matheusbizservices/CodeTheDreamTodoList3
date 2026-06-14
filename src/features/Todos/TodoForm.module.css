@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  margin: var(--space-md) 0;
+}
+
+.field {
+  flex: 1;
+}
+
+.submitButton {
+  min-height: 44px;
+  margin-top: 22px;
+  padding: 0 var(--space-md);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.submitButton:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .submitButton {
+    margin-top: 0;
+  }
+}
