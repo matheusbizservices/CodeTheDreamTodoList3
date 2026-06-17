@@ -1,63 +1,47 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
+import TextInputWithLabel from '../shared/TextInputWithLabel';
+import { isValidTodoTitle } from '../utils/todoValidation';
 
 function TodoForm(props) {
+  const [workingTodoTitle, setWorkingTodoTitle] = useState('');
 
-const [workingTodoTitle, setWorkingTodoTitle] = useState('');
+  const inputRef = useRef();
 
-const inputRef = useRef();
+  const handleAddTodo = (event) => {
+    event.preventDefault();
 
-const handleAddTodo = (event) => {
+    const cleanedTitle = workingTodoTitle.trim();
 
-event.preventDefault();
+    // don't allow blank todos
+    if (isValidTodoTitle(cleanedTitle)) {
+      props.onAddTodo(cleanedTitle);
 
-const cleanedTitle = workingTodoTitle.trim();
+      setWorkingTodoTitle('');
 
-// don't allow blank todos
-if (cleanedTitle) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }
+  };
 
-  props.onAddTodo(cleanedTitle);
+  return (
+    <form onSubmit={handleAddTodo}>
+      <TextInputWithLabel
+        ref={inputRef}
+        elementId="todoTitle"
+        labelText="Todo: "
+        value={workingTodoTitle}
+        onChange={(e) => setWorkingTodoTitle(e.target.value)}
+      />
 
-  setWorkingTodoTitle('');
-
-  if (inputRef.current) {
-    inputRef.current.focus();
-  }
-
-}
-
-};
-
-return (
-<form onSubmit={handleAddTodo}>
-
-  <label htmlFor="todoTitle">
-    Todo:
-  </label>
-
-  <input
-    ref={inputRef}
-    type="text"
-    id="todoTitle"
-    value={workingTodoTitle}
-    onChange={(e) => {
-      setWorkingTodoTitle(e.target.value);
-    }}
-    placeholder="Todo text"
-  />
-
-  <button
-    type="submit"
-    disabled={!workingTodoTitle.trim()}
-  >
-    Add Todo
-  </button>
-
-  {/* maybe character limit later */}
-  {/* <small>Max 100 chars?</small> */}
-
-</form>
-
-);
+      <button
+        type="submit"
+        disabled={!isValidTodoTitle(workingTodoTitle)}
+      >
+        Add Todo
+      </button>
+    </form>
+  );
 }
 
 export default TodoForm;
