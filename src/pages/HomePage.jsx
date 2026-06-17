@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
+import styles from './StaticPage.module.css';
 
 function HomePage() {
   const { isAuthenticated } = useAuth();
@@ -15,7 +16,7 @@ function HomePage() {
   }, [isAuthenticated, navigate]);
 
   return (
-    <div>
+    <div className={`${styles.page} ${styles.centered}`}>
       <p>Redirecting...</p>
     </div>
   );

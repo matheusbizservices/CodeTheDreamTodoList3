@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
+import styles from './Logoff.module.css';
 
 function Logoff() {
   const { email, logout } = useAuth();
@@ -13,9 +14,9 @@ function Logoff() {
   };
 
   return (
-    <div>
-      <span>{email}</span>
-      <button type="button" onClick={handleLogOff}>
+    <div className={styles.wrapper}>
+      <span className={styles.email}>{email}</span>
+      <button type="button" className={styles.button} onClick={handleLogOff}>
         Log Off
       </button>
     </div>

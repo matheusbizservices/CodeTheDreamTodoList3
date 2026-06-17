@@ -13,6 +13,7 @@ import {
   initialTodoState,
   TODO_ACTIONS,
 } from '../reducers/todoReducer';
+import styles from './TodosPage.module.css';
 
 function TodosPage() {
   const { token } = useAuth();
@@ -72,7 +73,7 @@ function TodosPage() {
     } catch (fetchError) {
       const isFilterError =
         debouncedFilterTerm ||
-        sortBy !== 'creationDate' ||
+        sortBy !== 'createdAt' ||
         sortDirection !== 'desc';
 
       dispatch({
@@ -231,11 +232,14 @@ function TodosPage() {
 
   return (
     <div>
+      <h2>Todos</h2>
+
       {error && (
-        <div role="alert">
-          <p>{error}</p>
+        <div className={styles.alert} role="alert">
+          <p className={styles.alertText}>{error}</p>
           <button
             type="button"
+            className={styles.alertButton}
             onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_ERROR })}
           >
             Clear Error
@@ -244,32 +248,39 @@ function TodosPage() {
       )}
 
       {filterError && (
-        <div role="alert">
-          <p>{filterError}</p>
+        <div className={styles.alert} role="alert">
+          <p className={styles.alertText}>{filterError}</p>
           <button
             type="button"
+            className={styles.alertButton}
             onClick={() => dispatch({ type: TODO_ACTIONS.CLEAR_FILTER_ERROR })}
           >
             Clear Filter Error
           </button>
-          <button type="button" onClick={handleResetFilters}>
+          <button
+            type="button"
+            className={styles.alertButton}
+            onClick={handleResetFilters}
+          >
             Reset Filters
           </button>
         </div>
       )}
 
-      {isTodoListLoading && <p>Loading...</p>}
+      {isTodoListLoading && <p className={styles.loading}>Loading todos...</p>}
 
-      <SortBy
-        sortBy={sortBy}
-        sortDirection={sortDirection}
-        onSortByChange={handleSortByChange}
-        onSortDirectionChange={handleSortDirectionChange}
-      />
+      <div className={styles.controls}>
+        <SortBy
+          sortBy={sortBy}
+          sortDirection={sortDirection}
+          onSortByChange={handleSortByChange}
+          onSortDirectionChange={handleSortDirectionChange}
+        />
 
-      <StatusFilter />
+        <StatusFilter />
 
-      <FilterInput filterTerm={filterTerm} onFilterChange={handleFilterChange} />
+        <FilterInput filterTerm={filterTerm} onFilterChange={handleFilterChange} />
+      </div>
 
       <TodoForm onAddTodo={addTodo} />
 

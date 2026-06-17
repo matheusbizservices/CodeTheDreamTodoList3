@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { useAuth } from '../contexts/useAuth';
+import styles from '../pages/StaticPage.module.css';
 
 function RequireAuth({ children }) {
   const { isAuthenticated } = useAuth();
@@ -15,7 +16,11 @@ function RequireAuth({ children }) {
   }, [isAuthenticated, location, navigate]);
 
   if (!isAuthenticated) {
-    return <p>Redirecting to login...</p>;
+    return (
+      <div className={`${styles.page} ${styles.centered}`}>
+        <p>Redirecting to login...</p>
+      </div>
+    );
   }
 
   return children;

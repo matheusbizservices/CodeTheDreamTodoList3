@@ -1,0 +1,100 @@
+.item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-bottom: var(--space-sm);
+  background: var(--bg);
+  transition: border-color 0.15s;
+}
+
+.item:hover {
+  border-color: var(--accent-border);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.title {
+  flex: 1;
+  text-align: left;
+  border: none;
+  background: none;
+  padding: var(--space-sm) 0;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  word-break: break-word;
+}
+
+.title:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.completed {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.saveButton,
+.cancelButton {
+  min-height: 44px;
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.saveButton {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.saveButton:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.saveButton:disabled {
+  background: var(--border);
+  border-color: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background: var(--bg-muted);
+  color: var(--text);
+}
+
+.cancelButton:hover {
+  background: var(--color-danger-bg);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}

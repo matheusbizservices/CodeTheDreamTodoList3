@@ -1,19 +1,27 @@
+import styles from './Controls.module.css';
+
 function SortBy({ sortBy, sortDirection, onSortByChange, onSortDirectionChange }) {
   return (
-    <div>
-      <label htmlFor="sortBy">Sort by</label>
+    <div className={styles.control}>
+      <label className={styles.label} htmlFor="sortBy">
+        Sort by
+      </label>
       <select
         id="sortBy"
+        className={styles.select}
         value={sortBy}
         onChange={(event) => onSortByChange(event.target.value)}
       >
-        <option value="creationDate">Creation Date</option>
+        <option value="createdAt">Creation Date</option>
         <option value="title">Title</option>
       </select>
 
-      <label htmlFor="sortDirection">Order</label>
+      <label className={styles.label} htmlFor="sortDirection">
+        Order
+      </label>
       <select
         id="sortDirection"
+        className={styles.select}
         value={sortDirection}
         onChange={(event) => onSortDirectionChange(event.target.value)}
       >

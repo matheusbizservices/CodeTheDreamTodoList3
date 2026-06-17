@@ -1,0 +1,14 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-md) 0;
+}
+
+.emptyMessage {
+  padding: var(--space-lg);
+  text-align: center;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  margin: var(--space-md) 0;
+}
